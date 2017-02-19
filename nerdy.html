@@ -1,0 +1,39 @@
+<html>
+<head>
+<title>Nerdy Calculator</title>
+<style type="text/css">
+* {
+	font-family: monospace;
+	font-size: x-large;
+}
+input {
+	width: 6em;
+	padding: 0.2em;
+}
+#container {
+	text-align: center;
+	margin-top: 5em;
+}
+</style>
+<script src="nerdy.js"></script>
+</head>
+
+<body>
+
+<div id="container">
+<input id="var1" type="number" value="5" onmousewheel="xscroll(event, this)" onkeyup="valuechange(this)" onclick="valuechange(this)" />
+
+<select id="operator" onchange="operatorchange(this)">
+<option value="mult">x</option>
+<option value="add">+</option>
+<option value="div">/</option>
+<option value="sub">-</option>
+</select>
+
+<input id="var2" type="number" value="5" onmousewheel="xscroll(event, this)" onkeyup="valuechange(this)" onclick="valuechange(this)" />
+=
+<input id="product" type="number" value="25" onmousewheel="xscroll(event, this)" onkeyup="valuechange(this)" onclick="valuechange(this)" />
+</div>
+
+</body>
+</html>

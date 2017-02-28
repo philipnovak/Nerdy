@@ -6,6 +6,9 @@
 	font-family: monospace;
 	font-size: x-large;
 }
+body {
+	background-image: url('noisy_grid.png');
+}
 input {
 	width: 6em;
 	padding: 0.2em;
@@ -14,25 +17,54 @@ input {
 	text-align: center;
 	margin-top: 5em;
 }
+.inputwrapper {
+	display: inline-block;
+}
+.inputwrapper > a {
+	display: inline-block;
+	cursor: pointer;
+	height: 16px;
+	width: 16px;
+	position: relative;
+	right: -0.3em;
+	bottom: -0.2em;
+}
+.inputwrapper.locked > a {
+	background-image: url('locked.png');
+}
+.inputwrapper.unlocked > a {
+	background-image: url('unlocked.png');
+}
 </style>
+<link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.min.css">
+<script src="jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>
+<script src="jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
 <script src="nerdy.js"></script>
 </head>
 
 <body>
 
 <div id="container">
-<input id="var1" type="number" value="5" onmousewheel="xscroll(event, this)" onkeyup="valuechange(this)" onclick="valuechange(this)" />
+
+<span class="inputwrapper locked"><a onclick="lockvar(this, 'var1')"></a>
+<input id="var1" type="number" value="5" onwheel="xscroll(event, this)" onkeypress="keyinput(event, this)" oninput="valuechange(this)" />
+</span>
 
 <select id="operator" onchange="operatorchange(this)">
-<option value="mult">x</option>
-<option value="add">+</option>
-<option value="div">/</option>
-<option value="sub">-</option>
+<option value="*">&times;</option>
+<option value="+">&plus;</option>
+<option value="/">&#8725;</option>
+<option value="-">&minus;</option>
 </select>
 
-<input id="var2" type="number" value="5" onmousewheel="xscroll(event, this)" onkeyup="valuechange(this)" onclick="valuechange(this)" />
+<span class="inputwrapper unlocked"><a onclick="lockvar(this, 'var2')"></a>
+<input id="var2" type="number" value="5" onwheel="xscroll(event, this)" onkeypress="keyinput(event, this)" oninput="valuechange(this)" />
+</span>
 =
-<input id="product" type="number" value="25" onmousewheel="xscroll(event, this)" onkeyup="valuechange(this)" onclick="valuechange(this)" />
+<span class="inputwrapper unlocked"><a onclick="lockvar(this, 'product')"></a>
+<input id="product" type="number" value="25" onwheel="xscroll(event, this)" onkeypress="keyinput(event, this)" oninput="valuechange(this)" />
+</span>
+
 </div>
 
 </body>

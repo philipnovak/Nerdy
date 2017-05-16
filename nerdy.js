@@ -19,7 +19,7 @@ var mathTable = {
 		"n3": function() { return  n1.value / n2.value  }
 	},
 	"-": {
-		"n1": function() { return  n2.value - n3.value  },
+		"n1": function() { return +n3.value + +n2.value },
 		"n2": function() { return  n1.value - n3.value  },
 		"n3": function() { return  n1.value - n2.value  }
 	}

@@ -1,70 +1,65 @@
 <html>
 <head>
 <title>Nerdy Calculator</title>
-<style type="text/css">
+<style>
 * {
 	font-family: monospace;
 	font-size: x-large;
+}
+*:focus {
+	outline: none;
 }
 body {
 	background-image: url('noisy_grid.png');
 }
 input {
+	border: #bbb 1px solid;
 	width: 6em;
 	padding: 0.2em;
 }
+option {
+	border: #bbb 1px solid;
+}
 #container {
 	text-align: center;
-	margin-top: 5em;
+	padding: 5em 1em;
 }
-.inputwrapper {
-	display: inline-block;
-}
-.inputwrapper > a {
-	display: inline-block;
-	cursor: pointer;
-	height: 16px;
-	width: 16px;
-	position: relative;
-	right: -0.3em;
-	bottom: -0.2em;
-}
-.inputwrapper.locked > a {
+.locked {
 	background-image: url('locked.png');
+	background-repeat: no-repeat;
+	background-position: 5em;
 }
-.inputwrapper.unlocked > a {
-	background-image: url('unlocked.png');
+.locked::-webkit-inner-spin-button, 
+.locked::-webkit-outer-spin-button { 
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	margin: 0; 
 }
 </style>
-<link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.min.css">
-<script src="jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>
-<script src="jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+<!-- <link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.min.css"> -->
+<!-- <script src="jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script> -->
+<!-- <script src="jquery-ui-1.12.1.custom/jquery-ui.min.js"></script> -->
 <script src="nerdy.js"></script>
 </head>
 
 <body>
 
 <div id="container">
+	<p>Right-click a number to lock its value</p>
 
-<span class="inputwrapper locked"><a onclick="lockvar(this, 'var1')"></a>
-<input id="var1" type="number" value="5" onwheel="xscroll(event, this)" onkeypress="keyinput(event, this)" oninput="valuechange(this)" />
-</span>
+	<input type="number" id="n1">
+	<select id="o1">
+		<option value="*">&times;</option>
+		<option value="+">&plus;</option>
+		<option value="/">&#8725;</option>
+		<option value="-">&minus;</option>
+	</select>
+	<input type="number" id="n2">
+	=
+	<input type="number" id="n3">
 
-<select id="operator" onchange="operatorchange(this)">
-<option value="*">&times;</option>
-<option value="+">&plus;</option>
-<option value="/">&#8725;</option>
-<option value="-">&minus;</option>
-</select>
-
-<span class="inputwrapper unlocked"><a onclick="lockvar(this, 'var2')"></a>
-<input id="var2" type="number" value="5" onwheel="xscroll(event, this)" onkeypress="keyinput(event, this)" oninput="valuechange(this)" />
-</span>
-=
-<span class="inputwrapper unlocked"><a onclick="lockvar(this, 'product')"></a>
-<input id="product" type="number" value="25" onwheel="xscroll(event, this)" onkeypress="keyinput(event, this)" oninput="valuechange(this)" />
-</span>
-
+	<p>Mouse over and scroll to change values quickly</p>
 </div>
 
 </body>

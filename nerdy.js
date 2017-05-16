@@ -1,82 +1,94 @@
-var operator = "*";
-var locked;
-var unlocked;
+"use strict";
 
-// TODO: consolidate operators, make variables lockable
-function valuechange(element) {
-	var var1 = document.getElementById("var1");
-	var var2 = document.getElementById("var2");
-	var product = document.getElementById("product");
-	if(operator == "*") {
-		switch(element.id) {
-			case "var1": product.value = var1.value * var2.value; break;
-			case "var2": product.value = var1.value * var2.value; break;
-			case "product": var2.value = product.value / var1.value; break;
-		}
+var inputs;
+
+var mathTable = {
+	"*": {
+		"n1": function() { return  n3.value / n2.value  },
+		"n2": function() { return  n3.value / n1.value  },
+		"n3": function() { return  n1.value * n2.value  }
+	},
+	"+": {
+		"n1": function() { return  n3.value - n2.value  },
+		"n2": function() { return  n3.value - n1.value  },
+		"n3": function() { return +n1.value + +n2.value }
+	},
+	"/": {
+		"n1": function() { return  n3.value * n2.value  },
+		"n2": function() { return  n1.value / n3.value  },
+		"n3": function() { return  n1.value / n2.value  }
+	},
+	"-": {
+		"n1": function() { return  n2.value - n3.value  },
+		"n2": function() { return  n1.value - n3.value  },
+		"n3": function() { return  n1.value - n2.value  }
 	}
-	else if(operator == "+") {
-		switch(element.id) {
-			case "var1": product.value = +var1.value + +var2.value; break;
-			case "var2": product.value = +var1.value + +var2.value; break;
-			case "product": var2.value = product.value - var1.value; break;
-		}
-	}
-	else if(operator == "/") {
-		switch(element.id) {
-			case "var1": product.value = var1.value / var2.value; break;
-			case "var2": product.value = var1.value / var2.value; break;
-			case "product": var1.value = product.value * var2.value; break;
-		}
-	}
-	else if(operator == "-") {
-		switch(element.id) {
-			case "var1": product.value = var1.value - var2.value; break;
-			case "var2": product.value = var1.value - var2.value; break;
-			case "product": var2.value = var1.value - product.value; break;
-		}
-	}
-	console.log(var1.value + " " + operator + " " + var2.value);
 }
 
-function operatorchange(element) {
-	operator = element.options[element.selectedIndex].value;
-	valuechange(document.getElementById("var2"));
+function valueChange() {
+	for (var i = 0; i < inputs.length; i++) {
+		var input = inputs[i];
+		if (this === input || input.isLocked()) {
+			continue;
+		}
+		else {
+			input.value = mathTable[o1.value][input.id]();
+			break;
+		}
+	}
 }
 
-function keyinput(event, element) {
-	if(/[*+/-]/.test(event.key)) {
+function keyInput() {
+	if (/[*+/-]/.test(event.key)) {
 		event.preventDefault();
-		var operatorelement = document.getElementById("operator");
-		operatorelement.value = event.key;
-		operatorchange(operatorelement);
-		document.getElementById("var2").select();
+		o1.value = event.key;
+		n2.select();
 	}
 }
 
-function xscroll(event, element) {
-	element.blur();
-	if(event.wheelDelta >= 1) {
-		if(event.shiftKey) element.value = +element.value + +10;
-		else element.value++;
+function wheelSpin() {
+	event.preventDefault();
+	this.blur();
+	if (event.wheelDelta >= 1) {
+		if (event.ctrlKey && event.shiftKey) this.value = +this.value + +1000;
+		else if (event.ctrlKey) this.value = +this.value + +100;
+		else if (event.shiftKey) this.value = +this.value + +10;
+		else if (event.altKey) this.value *= 2;
+		else this.value++;
 	}
 	else {
-		if(event.shiftKey) element.value -= 10;
-		else element.value--;
+		if (event.ctrlKey && event.shiftKey) this.value -= 1000;
+		else if (event.ctrlKey) this.value -= 100;
+		else if (event.shiftKey) this.value -= 10;
+		else if (event.altKey) this.value /= 2;
+		else this.value--;
 	}
-	valuechange(element);
+	this.valueChange();
 }
 
-function lockvar(element, lockid) {
-	if(element.parentElement.className.indexOf("unlocked") > -1) {
-		element.parentElement.className = "inputwrapper locked";
-		locked = lockid;
-	}
-	else {
-		element.parentElement.className = "inputwrapper unlocked";
-		unlocked = lockid;
-	}
+function lockNum() {
+	event.preventDefault();
+	this.classList.toggle("locked");
 }
 
-$(function() {
-	$(".inputwrapper").draggable();
-});
+function isLocked() {
+	return this.classList.contains("locked");
+}
+
+window.onload = function() {
+	inputs = [n3, n1, n2];
+
+	for (var i = 0; i < inputs.length; i++) {
+		inputs[i].valueChange = valueChange;
+		inputs[i].onkeypress = keyInput;
+		inputs[i].oninput = valueChange;
+		inputs[i].onwheel = wheelSpin;
+		inputs[i].oncontextmenu = lockNum;
+		inputs[i].isLocked = isLocked;
+		// inputs[i].onclick = function() {this.select()};
+	}
+
+	o1.onchange = function() {
+		n2.valueChange();
+	}
+}

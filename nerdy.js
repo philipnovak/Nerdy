@@ -78,17 +78,14 @@ function isLocked() {
 window.onload = function() {
 	inputs = [n3, n1, n2];
 
-	for (var i = 0; i < inputs.length; i++) {
-		inputs[i].valueChange = valueChange;
-		inputs[i].onkeypress = keyInput;
-		inputs[i].oninput = valueChange;
-		inputs[i].onwheel = wheelSpin;
-		inputs[i].oncontextmenu = lockNum;
-		inputs[i].isLocked = isLocked;
-		// inputs[i].onclick = function() {this.select()};
-	}
+	inputs.forEach(function(input) {
+		input.valueChange = valueChange;
+		input.onkeypress = keyInput;
+		input.oninput = valueChange;
+		input.onwheel = wheelSpin;
+		input.oncontextmenu = lockNum;
+		input.isLocked = isLocked;
+	});
 
-	o1.onchange = function() {
-		n2.valueChange();
-	}
+	o1.onchange = valueChange;
 }

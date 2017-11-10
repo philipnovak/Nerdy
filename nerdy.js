@@ -8,6 +8,8 @@ var Equation = algebra.Equation;
 var expression,
 	equation,
 	inputs,
+	operators,
+	rightSide,
 	selected;
 
 // var leftSide = {
@@ -30,23 +32,24 @@ var operatorMap = {
 function evaluateEquation() {
 	expression = new Expression('n1');
 	expression = operatorMap[o1.value]('n2');
+	expression = operatorMap[o2.value]('n3');
 
-	equation = new Equation(expression, +n3.value);
+	equation = new Equation(expression, +rightSide.value);
 
 	console.log(equation.toString());
 }
 
 function solveForSelected() {
-	if (selected !== n3) {               //    .---- This will need to be refactored
-		var evaluation = {};             //    |    to only iterate through expression1
-		inputs.forEach(function(input) { //    v
-			if (input !== selected && input !== n3) {
+	if (selected !== rightSide) {
+		var evaluation = {};
+		inputs.forEach(function(input) {
+			if (input !== selected && input !== rightSide) {
 				evaluation[input.id] = +input.value;
 			}
 		});
 		console.log(evaluation);
 
-		equation = new Equation(expression.eval(evaluation), +n3.value);
+		equation = new Equation(expression.eval(evaluation), +rightSide.value);
 		console.log(equation.toString());
 
 		var solution = equation.solveFor(selected.id).toString();
@@ -71,9 +74,10 @@ function solveForSelected() {
 }
 
 function valueChange() {
+	console.log("Recalculating...");
 	if (selected === this) {
-		if (this !== n3) {
-			select(n3);
+		if (this !== rightSide) {
+			select(rightSide);
 			this.valueChange();
 		}
 		else {
@@ -88,7 +92,7 @@ function valueChange() {
 
 function operatorChange() {
 	evaluateEquation();
-	n2.valueChange();
+	n3.valueChange();
 }
 
 function wheelSpin() {
@@ -136,7 +140,6 @@ function isSelected(id) {
 
 window.onload = function() {
 	inputs = document.querySelectorAll('input');
-
 	inputs.forEach(function(input) {
 		input.valueChange = valueChange;
 		input.oninput = valueChange;
@@ -147,7 +150,12 @@ window.onload = function() {
 
 	selected = document.querySelector('.selected');
 
-	o1.onchange = operatorChange;
+	operators = document.querySelectorAll('select');
+	operators.forEach(function(operator) {
+		operator.onchange = operatorChange;
+	})
+
+	rightSide = n4;
 
 	evaluateEquation();
 }

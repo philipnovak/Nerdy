@@ -10,30 +10,17 @@ var expression,
 	inputs,
 	selected;
 
-var mathTable = {
-	'*': {
-		'n1': function() { return  n3.value / n2.value  },
-		'n2': function() { return  n3.value / n1.value  },
-		'n3': function() { return  n1.value * n2.value  }
-	},
-	'+': {
-		'n1': function() { return  n3.value - n2.value  },
-		'n2': function() { return  n3.value - n1.value  },
-		'n3': function() { return +n1.value + +n2.value }
-	},
-	'/': {
-		'n1': function() { return  n3.value * n2.value  },
-		'n2': function() { return  n1.value / n3.value  },
-		'n3': function() { return  n1.value / n2.value  }
-	},
-	'-': {
-		'n1': function() { return +n3.value + +n2.value },
-		'n2': function() { return  n1.value - n3.value  },
-		'n3': function() { return  n1.value - n2.value  }
-	}
-}
+// var leftSide = {
+// 	inputs: [n1, n2],
+// 	expression: 'n1n2'
+// }
 
-var operatorTable = {
+// var rightSide = {
+// 	inputs: [n3],
+// 	expression: 'n3'
+// }
+
+var operatorMap = {
 	'*': function(n) { return expression.multiply(n) },
 	'+': function(n) { return expression.add(n) },
 	'/': function(n) { return expression.divide(n) },
@@ -42,7 +29,7 @@ var operatorTable = {
 
 function evaluateEquation() {
 	expression = new Expression('n1');
-	expression = operatorTable[o1.value]('n2');
+	expression = operatorMap[o1.value]('n2');
 
 	equation = new Equation(expression, +n3.value);
 
@@ -60,9 +47,12 @@ function solveForSelected() {
 		console.log(evaluation);
 
 		equation = new Equation(expression.eval(evaluation), +n3.value);
-
 		console.log(equation.toString());
-		console.log(selected.id + ' = ' + equation.solveFor(selected.id).toString());
+
+		var solution = equation.solveFor(selected.id).toString();
+		console.log(selected.id + ' = ' + solution);
+
+		selected.value = eval(solution);
 	}
 	else {
 		var evaluation = {};
@@ -73,7 +63,10 @@ function solveForSelected() {
 		});
 		console.log(evaluation);
 
-		console.log(selected.id + ' = ' + expression.eval(evaluation));
+		var solution = expression.eval(evaluation);
+		console.log(selected.id + ' = ' + solution);
+
+		selected.value = eval(solution);
 	}
 }
 
@@ -89,19 +82,12 @@ function valueChange() {
 		}
 	}
 	else {
-		selected.value = mathTable[o1.value][selected.id]();
+		solveForSelected();
 	}
 }
 
 function operatorChange() {
-	expression = new Expression('n1');
-	expression = operatorTable[o1.value]('n2');
-	expression2 = new Expression('n3');
-
-	equation = new Equation(expression, expression2);
-
-	console.log(equation.toString());
-
+	evaluateEquation();
 	n2.valueChange();
 }
 
@@ -134,6 +120,7 @@ function select(input) {
 		selected.classList.remove('selected');
 		selected = input;
 		selected.classList.add('selected');
+		solveForSelected();
 	}
 }
 
@@ -160,5 +147,7 @@ window.onload = function() {
 
 	selected = document.querySelector('.selected');
 
-	o1.onchange = n2.valueChange;
+	o1.onchange = operatorChange;
+
+	evaluateEquation();
 }

@@ -25,7 +25,7 @@ var expression,
 var operatorMap = {
 	'*': function(n) { return expression.multiply(n) },
 	'+': function(n) { return expression.add(n) },
-	'/': function(n) { return expression.divide(n) },
+	'/': function(n) { return expression.divide(eval(document.getElementById(n).value)) },
 	'-': function(n) { return expression.subtract(n) }
 }
 
@@ -40,10 +40,10 @@ function evaluateEquation() {
 }
 
 function solveForSelected() {
-	if (selected !== rightSide) {
+	if (!rightSide.isSelected()) {
 		var evaluation = {};
 		inputs.forEach(function(input) {
-			if (input !== selected && input !== rightSide) {
+			if (!input.isSelected() && input !== rightSide) {
 				evaluation[input.id] = +input.value;
 			}
 		});
@@ -75,7 +75,7 @@ function solveForSelected() {
 
 function valueChange() {
 	console.log("Recalculating...");
-	if (selected === this) {
+	if (this.isSelected()) {
 		if (this !== rightSide) {
 			select(rightSide);
 			this.valueChange();
